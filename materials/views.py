@@ -9,7 +9,12 @@ from materials.serializers import CourseSerializer, LessonSerializer
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
-    serializer_class = CourseSerializer
+    filterset_fields = ('lessons',)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return LessonSerializer
+        return CourseSerializer
 
 
 class LessonCreateApiView(CreateAPIView):
