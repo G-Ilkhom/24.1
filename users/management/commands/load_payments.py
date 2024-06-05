@@ -24,4 +24,4 @@ class Command(BaseCommand):
             payment_data['lesson'] = lesson
 
         payment = Payment.objects.create(**payment_data)
-        self.stdout.write(self.style.SUCCESS(f'Payment successfully created: {payment.id}'))
+        self.stdout.write(self.style.SUCCESS(f'Платеж успешно создан: {payment.id}'))
