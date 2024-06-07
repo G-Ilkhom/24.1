@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from materials.models import Lesson, Course
+
+from materials.models import Course, Lesson
 
 
 class User(AbstractUser):
@@ -39,13 +40,13 @@ class User(AbstractUser):
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payment")
     payment_date = models.DateField(auto_now_add=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.IntegerField()
-    method_choice = {'наличными': 'наличными', 'переводом': 'переводом'}
+    method_choice = {"наличными": "наличными", "переводом": "переводом"}
     payment_method = models.CharField(max_length=10, choices=method_choice)
 
     def __str__(self):
-        return f'{self.user} - {self.course} - {self.amount}'
+        return f"{self.user} - {self.course} - {self.amount}"

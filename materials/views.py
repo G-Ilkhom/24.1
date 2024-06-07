@@ -9,7 +9,7 @@ from materials.serializers import CourseSerializer, LessonSerializer
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
-    filterset_fields = ('lessons',)
+    filterset_fields = ("lessons",)
 
     def get_serializer_class(self):
         if self.action == "retrieve":

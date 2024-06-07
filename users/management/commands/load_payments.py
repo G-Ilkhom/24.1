@@ -1,27 +1,30 @@
-from django.core.management.base import BaseCommand
-from users.models import User, Payment
-from materials.models import Course, Lesson
 from datetime import datetime
+
+from django.core.management.base import BaseCommand
+
+from materials.models import Course, Lesson
+from users.models import Payment, User
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        user = User.objects.first()
-        course = Course.objects.first()
-        lesson = Lesson.objects.first()
+        # Payment.objects.all().delete()
+        # User.objects.all().delete()
 
-        payment_data = {
-            'user': user,
-            'payment_date': datetime.now().date(),
-            'amount': 250.00,
-            'payment_method': 'переводом'
-        }
+        user, created = User.objects.get_or_create(email="example@sky.pro")
+        course, created = Course.objects.get_or_create(name="Python-разработчик")
+        lesson, created = Lesson.objects.get_or_create(
+            name="Сериализаторы", course=course
+        )
 
-        if course:
-            payment_data['course'] = course
-        if lesson:
-            payment_data['lesson'] = lesson
+        Payment.objects.create(
+            user=user,
+            payment_date=datetime.now().date(),
+            amount=500,
+            payment_method="переводом",
+            course=course,
+            lesson=lesson,
+        )
 
-        payment = Payment.objects.create(**payment_data)
-        self.stdout.write(self.style.SUCCESS(f'Платеж успешно создан: {payment.id}'))
+        self.stdout.write(self.style.SUCCESS(f"Платеж успешно создан"))
