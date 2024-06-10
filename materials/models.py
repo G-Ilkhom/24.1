@@ -1,5 +1,7 @@
 from django.db import models
 
+User = "users.User"
+
 
 class Course(models.Model):
     name = models.CharField(
@@ -10,6 +12,14 @@ class Course(models.Model):
     )
     description = models.TextField(
         blank=True, null=True, help_text="Укажите описание курса"
+    )
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
     )
 
     class Meta:

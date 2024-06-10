@@ -1,7 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     RetrieveAPIView, UpdateAPIView)
 from rest_framework.permissions import AllowAny
 
 from users.models import Payment, User
