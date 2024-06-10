@@ -41,6 +41,14 @@ class Lesson(models.Model):
         upload_to="lesson/preview", verbose_name="превью", blank=True, null=True
     )
     url_video = models.URLField(verbose_name="ссылка на видео", blank=True, null=True)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
+    )
 
     class Meta:
         verbose_name = "Урок"
