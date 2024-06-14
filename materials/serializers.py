@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 from materials.validators import youtube_url_validator
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 
 
 class LessonSerializer(ModelSerializer):
@@ -23,3 +23,15 @@ class CourseSerializer(ModelSerializer):
     class Meta:
         model = Course
         fields = ["id", "name", "lessons", "description", "count_lessons", "owner"]
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Subscription
+        fields = ['user', 'course', 'is_subscribed']
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return Subscription.objects.filter(user=user, course=obj.course).exists()
