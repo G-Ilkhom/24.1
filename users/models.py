@@ -40,14 +40,20 @@ class User(AbstractUser):
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Пользователь",
-                             help_text="Укажите пользователя", related_name="payment")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Пользователь",
+        help_text="Укажите пользователя",
+        related_name="payment",
+    )
     payment_date = models.DateField(auto_now_add=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.PositiveIntegerField(
-        verbose_name="Цена курса",
-        help_text="Укажите цену курса"
+        verbose_name="Цена курса", help_text="Укажите цену курса"
     )
     session_id = models.CharField(
         max_length=255,
@@ -64,7 +70,9 @@ class Payment(models.Model):
         help_text="Укажите ссылку на оплату",
     )
     method_choice = {"наличными": "наличными", "переводом": "переводом"}
-    payment_method = models.CharField(default='переводом', max_length=10, choices=method_choice)
+    payment_method = models.CharField(
+        default="переводом", max_length=10, choices=method_choice
+    )
 
     class Meta:
         verbose_name = "Платеж"
