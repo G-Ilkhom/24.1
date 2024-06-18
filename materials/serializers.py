@@ -14,18 +14,6 @@ class LessonSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class CourseSerializer(ModelSerializer):
-    count_lessons = SerializerMethodField(read_only=True)
-    lessons = LessonSerializer(many=True, read_only=True)
-
-    def get_count_lessons(self, obj):
-        return obj.lessons.count()
-
-    class Meta:
-        model = Course
-        fields = ["id", "name", "lessons", "description", "count_lessons", "owner"]
-
-
 class SubscriptionSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
@@ -36,3 +24,21 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
         user = self.context["request"].user
         return Subscription.objects.filter(user=user, course=obj.course).exists()
+
+
+class CourseSerializer(ModelSerializer):
+    count_lessons = SerializerMethodField(read_only=True)
+    lessons = LessonSerializer(many=True, read_only=True)
+    is_subscribed = SerializerMethodField(read_only=True)
+
+    def get_count_lessons(self, obj):
+        return obj.lessons.count()
+
+    def get_is_subscribed(self, obj):
+        user = self.context["request"].user
+        is_subscribed = Subscription.objects.filter(user=user, course=obj).exists()
+        return "подписан" if is_subscribed else "не подписан"
+
+    class Meta:
+        model = Course
+        fields = ["id", "name", "lessons", "description", "count_lessons", "owner", "is_subscribed"]
