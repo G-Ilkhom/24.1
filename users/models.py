@@ -40,13 +40,35 @@ class User(AbstractUser):
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payment")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Пользователь",
+                             help_text="Укажите пользователя", related_name="payment")
     payment_date = models.DateField(auto_now_add=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)
-    amount = models.IntegerField()
+    amount = models.PositiveIntegerField(
+        verbose_name="Цена курса",
+        help_text="Укажите цену курса"
+    )
+    session_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Id сессии",
+        help_text="Укажите id сессии",
+    )
+    link = models.URLField(
+        max_length=400,
+        blank=True,
+        null=True,
+        verbose_name="Ссылка на оплату",
+        help_text="Укажите ссылку на оплату",
+    )
     method_choice = {"наличными": "наличными", "переводом": "переводом"}
-    payment_method = models.CharField(max_length=10, choices=method_choice)
+    payment_method = models.CharField(default='переводом', max_length=10, choices=method_choice)
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
 
     def __str__(self):
-        return f"{self.user} - {self.course} - {self.amount}"
+        return self.amount

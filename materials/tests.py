@@ -124,7 +124,11 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_create(self):
         url = reverse("materials:lesson_create")
-        data = {"name": "DRF", "course": self.course.id, "url_video": "https://www.youtube.com/docker/"}
+        data = {
+            "name": "DRF",
+            "course": self.course.id,
+            "url_video": "https://www.youtube.com/docker/",
+        }
         response = self.client.post(url, data)
         print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -169,7 +173,7 @@ class LessonTestCase(APITestCase):
                     "preview": None,
                     "course": self.lesson.course.pk,
                     "owner": self.lesson.owner.pk,
-                    "url_video": None
+                    "url_video": None,
                 }
             ],
         }
