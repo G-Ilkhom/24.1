@@ -16,7 +16,7 @@ def send_email(course_id):
         subject=f'Курс {course} обновлен',
         message=f'Курс {course},на который вы подписаны обновлён',
         from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[subscribers.user.email, 'anonymoustoken@mail.ru']
+        recipient_list=[subscribers.user.email]
     )
 
 
