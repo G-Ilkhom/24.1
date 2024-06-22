@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from rest_framework.decorators import action
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView, get_object_or_404)
@@ -10,6 +13,7 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwner
+from materials.tasks import send_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -27,14 +31,22 @@ class CourseViewSet(ModelViewSet):
         course.owner = self.request.user
         course.save()
 
-    def get_permissions(self):
-        if self.action == "create":
-            self.permission_classes = (~IsModer,)
-        elif self.action in ["update", "retrieve"]:
-            self.permission_classes = (IsModer | IsOwner,)
-        elif self.action == "destroy":
-            self.permission_classes = (IsOwner | ~IsModer,)
-        return super().get_permissions()
+    # def get_permissions(self):
+    #     if self.action == "create":
+    #         self.permission_classes = (~IsModer,)
+    #     elif self.action in ["update", "retrieve"]:
+    #         self.permission_classes = (IsModer | IsOwner,)
+    #     elif self.action == "destroy":
+    #         self.permission_classes = (IsOwner | ~IsModer,)
+    #     return super().get_permissions()
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        send_email.delay(course_id=instance.id)
+        return Response(serializer.data)
 
 
 class LessonCreateApiView(CreateAPIView):
