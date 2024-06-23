@@ -1,8 +1,6 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-
-from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -128,10 +126,10 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_BEAT_SCHEDULE = {
-    'check_inactive_users': {
-        'task': 'materials.tasks.check_inactive_users',
-        'schedule': crontab(minute=0, hour=0),
-    },
+    'check_user': {
+        'task': 'materials.tasks.check_user',
+        'schedule': timedelta(minutes=1)
+    }
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
