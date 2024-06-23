@@ -8,16 +8,22 @@ from users.models import User
 
 @shared_task
 def send_email(course_id):
-    course = Course.objects.get(pk=course_id)
-    subscribers = Subscription.objects.get(course=course_id)
-    print("Отправка работает")
+    try:
+        course = Course.objects.get(pk=course_id)
+        subscribers = Subscription.objects.get(course=course_id)
 
-    send_mail(
-        subject=f'Курс {course} обновлен',
-        message=f'Курс {course},на который вы подписаны обновлён',
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[subscribers.user.email]
-    )
+        print("Отправка работает")
+
+        send_mail(
+            subject=f'Курс {course} обновлен',
+            message=f'Курс {course}, на который вы подписаны, обновлен',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[subscribers.user.email]
+        )
+    except Course.DoesNotExist:
+        print(f"Курс с id={course_id} не найден.")
+    except Subscription.DoesNotExist:
+        print(f"Подписчики на курс с id={course_id} не найдены.")
 
 
 @shared_task

@@ -109,3 +109,17 @@ class SubscriptionView(APIView):
             Subscription.objects.create(user=user, course=course_item)
             message = "Подписка добавлена"
         return Response({"message": message})
+
+    def patch(self, request):
+        user = request.user
+        course_id = request.data.get("course_id")
+        course_item = get_object_or_404(Course, id=course_id)
+        subs_item = Subscription.objects.filter(user=user, course=course_item)
+
+        if subs_item.exists():
+            subs_item.update(is_subscribed=True)
+            message = "Подписка обновлена на 'подписан'"
+        else:
+            message = "Подписка не найдена"
+
+        return Response({"message": message})

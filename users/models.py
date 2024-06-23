@@ -69,9 +69,17 @@ class Payment(models.Model):
         verbose_name="Ссылка на оплату",
         help_text="Укажите ссылку на оплату",
     )
-    method_choice = {"наличными": "наличными", "переводом": "переводом"}
+    METHOD_CHOICES = [
+        ("наличными", "наличными"),
+        ("переводом", "переводом"),
+    ]
+
     payment_method = models.CharField(
-        default="переводом", max_length=10, choices=method_choice
+        max_length=10,
+        choices=METHOD_CHOICES,
+        default="переводом",
+        verbose_name="Метод оплаты",
+        help_text="Выберите метод оплаты",
     )
 
     class Meta:
