@@ -127,7 +127,7 @@ CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_BEAT_SCHEDULE = {
     'check_user': {
-        'task': 'materials.tasks.check_user',
+        'task': 'materials.tasks.check_inactive_users',
         'schedule': timedelta(minutes=1)
     }
 }
